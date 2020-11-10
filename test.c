@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   printf("   Got: \x1b[33;1m");
   while (index < strlen(test)) {
     int value = libkdump_read((size_t)(test + index));
-    printf("%c", value);
+    printf("%c\n", value);
     fflush(stdout);
     index++;
   }

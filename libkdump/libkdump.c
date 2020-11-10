@@ -191,7 +191,8 @@ static int __attribute__((always_inline)) flush_reload(void *ptr) {
   flush(ptr);
 
   if (end - start < config.cache_miss_threshold) {
-    return 1;
+      fprintf(stdout,"hitting_address=%p, reload_time=%d\n",ptr,(int)(end-start));
+	  return 1;
   }
   return 0;
 }
@@ -534,7 +535,7 @@ int __attribute__((optimize("-O0"))) libkdump_read(size_t addr) {
     res_stat[i] = 0;
 
   sched_yield();
-
+  
   for (i = 0; i < config.measurements; i++) {
     if (config.fault_handling == TSX) {
       r = libkdump_read_tsx();

